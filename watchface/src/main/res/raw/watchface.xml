@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+    Match Day watch face
+    Static stadium background + live digital time + live weather temperature + heart rate hero slot
+-->
+<WatchFace width="450" height="450">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:10:00" />
+
+  <Scene backgroundColor="#0b551f">
+
+    <!-- Статичный фон: поле, табло, мяч, рамки (нарисовано заранее) -->
+    <PartImage x="0" y="0" width="450" height="450" name="Background">
+      <Image resource="background" />
+    </PartImage>
+
+    <!-- Живое время на табло -->
+    <DigitalClock x="60" y="215" width="330" height="70">
+      <TimeText x="0" y="0" width="330" height="70" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
+        <Font family="SYNC_TO_DEVICE" size="60.0" weight="BOLD" color="#ffffff" />
+      </TimeText>
+    </DigitalClock>
+
+    <!-- Живая погода: сначала проверяем доступность, только потом показываем температуру -->
+    <Condition>
+      <Expressions>
+        <Expression name="weather_available"><![CDATA[[WEATHER.IS_AVAILABLE]]]></Expression>
+      </Expressions>
+      <Compare expression="weather_available">
+        <PartText x="205" y="82" width="90" height="30">
+          <Text align="START">
+            <Font family="SYNC_TO_DEVICE" size="22.0" color="#ffffff">
+              <Template><![CDATA[%s°]]>
+                <Parameter expression="[WEATHER.TEMPERATURE]" />
+              </Template>
+            </Font>
+          </Text>
+        </PartText>
+      </Compare>
+      <Default>
+        <PartText x="205" y="82" width="90" height="30">
+          <Text align="START">
+            <Font family="SYNC_TO_DEVICE" size="16.0" color="#5a5a54">
+              <Template><![CDATA[--°]]></Template>
+            </Font>
+          </Text>
+        </PartText>
+      </Default>
+    </Condition>
+
+    <!-- Герой-слот: пульс -->
+    <ComplicationSlot x="157" y="341" width="136" height="58" slotId="0"
+      displayName="hero_complication_label"
+      supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE EMPTY">
+      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="136" height="58" outlinePadding="2.0" />
+
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="136" height="58">
+          <Text align="CENTER" ellipsis="TRUE">
+            <Font family="SYNC_TO_DEVICE" size="28.0" color="#ffffff">
+              <Template><![CDATA[%s]]>
+                <Parameter expression="[COMPLICATION.TEXT]" />
+              </Template>
+            </Font>
+          </Text>
+        </PartText>
+      </Complication>
+
+      <Complication type="EMPTY">
+        <PartText x="0" y="0" width="136" height="58">
+          <Text align="CENTER">
+            <Font family="SYNC_TO_DEVICE" size="14.0" color="#5a5a54">
+              <Template><![CDATA[+ Добавить]]></Template>
+            </Font>
+          </Text>
+        </PartText>
+      </Complication>
+    </ComplicationSlot>
+
+  </Scene>
+</WatchFace>
